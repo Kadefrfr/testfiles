@@ -1,0 +1,50 @@
+{
+  "user": {
+    "id": 12345,
+    "username": "john_doe",
+    "email": "john.doe@example.com",
+    "is_active": true
+  },
+  "preferences": {
+    "theme": "dark",
+    "language": "en_US",
+    "notifications": {
+      "email": true,
+      "push": false
+    }
+  },
+  "recent_activities": [
+    {
+      "timestamp": "2023-12-10T12:30:45Z",
+      "activity_type": "login",
+      "location": "New York, NY"
+    },
+    {
+      "timestamp": "2023-12-09T18:45:20Z",
+      "activity_type": "update_profile",
+      "details": "Changed profile picture"
+    },
+    {
+      "timestamp": "2023-12-08T09:15:00Z",
+      "activity_type": "post",
+      "details": "Shared a status update"
+    }
+  ],
+  "todos": [
+    {
+      "id": 1,
+      "task": "Complete project proposal",
+      "due_date": "2023-12-15"
+    },
+    {
+      "id": 2,
+      "task": "Review meeting notes",
+      "due_date": "2023-12-12"
+    },
+    {
+      "id": 3,
+      "task": "Buy groceries",
+      "due_date": null
+    }
+  ]
+}
