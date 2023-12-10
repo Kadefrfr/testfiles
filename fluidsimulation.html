@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluid Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fluidCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('fluidCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const gravity = 0.2; // Adjust the gravity strength
+    const dampingFactor = 0.9; // Adjust the damping factor
+
+    class Particle {
+      constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.dx = (Math.random() - 0.5) * 2;
+        this.dy = (Math.random() - 0.5) * 2;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      update() {
+        this.dy += gravity;
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.checkCollisionWithWalls();
+        this.checkCollisionWithOtherParticles();
+
+        this.draw();
+      }
+
+      checkCollisionWithWalls() {
+        if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+          this.dx = -this.dx * dampingFactor;
+        }
+
+        if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
+          this.dy = -this.dy * dampingFactor;
+        }
+      }
+
+      checkCollisionWithOtherParticles() {
+        for (const particle of particles) {
+          if (this !== particle && this.isColliding(particle)) {
+            this.handleCollisionResponse(particle);
+          }
+        }
+      }
+
+      isColliding(otherParticle) {
+        const distance = Math.hypot(this.x - otherParticle.x, this.y - otherParticle.y);
+        return distance < this.radius + otherParticle.radius;
+      }
+
+      handleCollisionResponse(otherParticle) {
+        const angle = Math.atan2(otherParticle.y - this.y, otherParticle.x - this.x);
+        const targetX = this.x + Math.cos(angle) * (this.radius + otherParticle.radius);
+        const targetY = this.y + Math.sin(angle) * (this.radius + otherParticle.radius);
+
+        const ax = (targetX - otherParticle.x) * 0.05;
+        const ay = (targetY - otherParticle.y) * 0.05;
+
+        this.dx -= ax * dampingFactor;
+        this.dy -= ay * dampingFactor;
+
+        otherParticle.dx += ax * dampingFactor;
+        otherParticle.dy += ay * dampingFactor;
+      }
+    }
+
+    function createParticles() {
+      for (let i = 0; i < 10; i++) {
+        const radius =
